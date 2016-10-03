@@ -12,6 +12,7 @@ To run the application, execute the following commands:
 - `composer install`
 - `bin/console doctrine:database:create`
 - `bin/console doctrine:schema:create`
+- `bin/console server:run`
 
 ### Docs ###
 
