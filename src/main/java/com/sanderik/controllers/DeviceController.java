@@ -4,6 +4,7 @@ import com.sanderik.helpers.TokenGenerator;
 import com.sanderik.models.Device;
 import com.sanderik.repositories.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
@@ -14,7 +15,7 @@ public class DeviceController {
     private DeviceRepository deviceRepository;
 
     @PostMapping("/device")
-    public String postDevice(@Valid @RequestBody Device device) {
+    public Device postDevice(@Valid @RequestBody Device device) {
         Device _device = deviceRepository.findOneByChipId(device.getChipId());
 
         if(_device == null){
@@ -22,6 +23,6 @@ public class DeviceController {
             deviceRepository.save(device);
         }
 
-        return _device.getConnectionToken();
+        return _device;
     }
 }

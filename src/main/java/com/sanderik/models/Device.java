@@ -1,5 +1,6 @@
 package com.sanderik.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 
@@ -17,6 +18,7 @@ public class Device {
     private String connectionToken;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
