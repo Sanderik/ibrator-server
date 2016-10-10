@@ -1,6 +1,7 @@
 package com.sanderik.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Entity
@@ -10,7 +11,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String email;
+
+    @NotNull
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
