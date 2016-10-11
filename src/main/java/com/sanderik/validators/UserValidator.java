@@ -3,12 +3,15 @@ package com.sanderik.validators;
 import com.sanderik.models.User;
 import com.sanderik.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import javax.xml.bind.ValidationEvent;
 
+@Component
 public class UserValidator implements Validator {
 
     @Autowired
@@ -23,12 +26,12 @@ public class UserValidator implements Validator {
     public void validate(Object o, Errors errors) {
         User user = (User) o;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "NotEmpty");
         if (user.getEmail().length() < 6 || user.getEmail().length() > 32) {
-            errors.rejectValue("username", "Size.userForm.username");
+            errors.rejectValue("email", "Size.userForm.email");
         }
         if (userService.findByUsername(user.getEmail()) != null) {
-            errors.rejectValue("username", "Duplicate.userForm.username");
+            errors.rejectValue("email", "Duplicate.userForm.email");
         }
 
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
