@@ -24,8 +24,9 @@ public class Device {
 
     public Device(){}
 
-    public Device(String connectionToken) {
+    public Device(String chipId, String connectionToken) {
         this.isOn = false;
+        this.chipId = chipId;
         this.connectionToken = connectionToken;
     }
 
