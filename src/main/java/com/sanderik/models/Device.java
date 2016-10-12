@@ -13,7 +13,9 @@ public class Device {
     @NotEmpty
     private String chipId;
 
-    private boolean isOn;
+    private boolean active;
+
+    private String name;
 
     private String connectionToken;
 
@@ -25,7 +27,7 @@ public class Device {
     public Device(){}
 
     public Device(String chipId, String connectionToken) {
-        this.isOn = false;
+        this.active = false;
         this.chipId = chipId;
         this.connectionToken = connectionToken;
     }
@@ -46,14 +48,6 @@ public class Device {
         this.connectionToken = connectionToken;
     }
 
-    public boolean isOn() {
-        return isOn;
-    }
-
-    public void setOn(boolean on) {
-        isOn = on;
-    }
-
     public String getChipId() {
         return chipId;
     }
@@ -68,6 +62,22 @@ public class Device {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
 

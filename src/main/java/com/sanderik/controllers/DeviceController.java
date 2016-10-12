@@ -2,22 +2,26 @@ package com.sanderik.controllers;
 
 import com.sanderik.helpers.TokenGenerator;
 import com.sanderik.models.Device;
+import com.sanderik.models.User;
+import com.sanderik.models.viewmodels.AddDeviceModel;
 import com.sanderik.repositories.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Description;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
-public class DeviceController {
+public class DeviceController extends BaseController{
 
     @Autowired private DeviceRepository deviceRepository;
 
     @Autowired private TokenGenerator tokenGenerator;
 
     @PostMapping("/device")
-    public Device postDevice(@Valid @RequestBody Device device) {
+    public Device registerDevice(@Valid @RequestBody Device device) {
         Device deviceResult = deviceRepository.findOneByChipId(device.getChipId());
 
         if(deviceResult == null){
@@ -28,9 +32,26 @@ public class DeviceController {
         return deviceResult;
     }
 
+    @RequestMapping(value = "/device/add", method = RequestMethod.POST)
+    public ModelAndView addDevice(@ModelAttribute AddDeviceModel addDeviceModel, Model model){
+        User user     = this.getUser();
+        Device device = deviceRepository.findOneByConnectionToken(addDeviceModel.getConnectionToken());
+
+        if(device == null){
+            model.addAttribute("error", "Connection token not found or expired.");
+        } else {
+            user.addDevice(device);
+            device.setUser(user);
+            device.setName(addDeviceModel.getName());
+
+            deviceRepository.save(device);
+            userRepository.save(user);
+            model.addAttribute(user.getDevices());
+        }
+        return new ModelAndView("redirect:/welcome");
+    }
+
     @RequestMapping("/send/{message}")
-    @Description("Call for sending messages to the last known Websocket session, " +
-            "only works when server has a socket connection with an ESP.")
     public String sendMessage(@PathVariable("message") String message) throws IOException {
         VibrateMessageHandler.sendMsg(message);
 

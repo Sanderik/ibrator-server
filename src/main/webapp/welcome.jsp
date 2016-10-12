@@ -24,18 +24,52 @@
     <![endif]-->
 </head>
 <body>
-<div class="container">
 
     <c:if test="${pageContext.request.userPrincipal.name != null}">
-        <form id="logoutForm" method="POST" action="${contextPath}/logout">
-            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-        </form>
+        <div class="container">
 
-        <h2>Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a></h2>
+            <form id="logoutForm" method="POST" action="${contextPath}/logout">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </form>
 
+            <h2>IBrator - Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a></h2><br/>
+
+            <h3> My iBrators: </h3>
+            <table class="table table-responsive">
+                <tr>
+                    <th>Name</th>
+                    <th>Connection token</th>
+                    <th>Active</th>
+                </tr>
+
+                <c:forEach var="device" items="${devices}">
+                    <tr>
+                        <td><c:out value="${device.name}"/></td>
+                        <td><c:out value="${device.connectionToken}"/></td>
+                        <td><c:out value="${device.active == true ? 'Yes' : 'No'}"/></td>
+                    </tr>
+                </c:forEach>
+                </table>
+
+            <form id="addDeviceForm" method="POST" action="${contextPath}/device/add">
+                <h3> Add an iBrator </h3>
+
+                <div class="form-group">
+                    <input class="form-control" type="text" name="name" required placeholder="Name"/>
+                </div>
+
+                <div class="form-group">
+                    <input class="form-control" type="text" name="connectionToken" required placeholder="Connection token*"/>
+                </div>
+
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <input type="submit" class="btn btn-default" value="Add">
+            </form>
+
+        </div>
     </c:if>
 
-</div>
 <!-- /container -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="${contextPath}/resources/js/bootstrap.min.js"></script>

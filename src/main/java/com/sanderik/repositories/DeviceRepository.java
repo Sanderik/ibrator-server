@@ -11,5 +11,7 @@ public interface DeviceRepository extends CrudRepository<Device, Long> {
 
     @Query("select d from Device d where d.chipId =?1")
     Device findOneByChipId(String chipId);
+
+    Device findOneByConnectionToken(String connectionToken);
 }
 

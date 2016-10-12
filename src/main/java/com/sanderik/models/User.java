@@ -85,4 +85,8 @@ public class User {
     public void setDevices(Set<Device> devices) {
         this.devices = devices;
     }
+
+    public void addDevice(Device device){
+        this.devices.add(device);
+    }
 }
