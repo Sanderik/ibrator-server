@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserRepository userDao;
+    @Autowired private UserRepository userDao;
 
     @RequestMapping("/user")
     public Iterable<User> get() {
