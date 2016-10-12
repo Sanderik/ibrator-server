@@ -4,12 +4,9 @@ import com.sanderik.models.User;
 import com.sanderik.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
-
-import javax.xml.bind.ValidationEvent;
 
 @Component
 public class UserValidator implements Validator {
@@ -30,7 +27,7 @@ public class UserValidator implements Validator {
         if (user.getEmail().length() < 6 || user.getEmail().length() > 32) {
             errors.rejectValue("email", "Size.userForm.email");
         }
-        if (userService.findByUsername(user.getEmail()) != null) {
+        if (userService.findByEmail(user.getEmail()) != null) {
             errors.rejectValue("email", "Duplicate.userForm.email");
         }
 

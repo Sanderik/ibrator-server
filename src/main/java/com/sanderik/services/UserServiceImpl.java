@@ -5,7 +5,6 @@ import com.sanderik.models.User;
 import com.sanderik.repositories.RoleRepository;
 import com.sanderik.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +25,17 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
+    @Transactional
     public void save(User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        roleRepository.save(new Role("user"));
-        user.setRoles(new HashSet<>(Collections.singletonList(new Role("user"))));
+        Role role = new Role("user");
+        roleRepository.save(role);
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
         userRepository.save(user);
     }
 
     @Override
-    public User findByUsername(String email) {
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }
