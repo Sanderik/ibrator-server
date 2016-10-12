@@ -38,6 +38,7 @@ public class DeviceController extends BaseController{
         Device device = deviceRepository.findOneByConnectionToken(addDeviceModel.getConnectionToken());
 
         if(device == null){
+            // TODO : Handle error messages in view
             model.addAttribute("error", "Connection token not found or expired.");
         } else {
             user.addDevice(device);
@@ -46,8 +47,8 @@ public class DeviceController extends BaseController{
 
             deviceRepository.save(device);
             userRepository.save(user);
-            model.addAttribute(user.getDevices());
         }
+
         return new ModelAndView("redirect:/welcome");
     }
 
