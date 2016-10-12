@@ -1,4 +1,4 @@
-package com.sanderik.config;
+package com.sanderik.configurations;
 
 import com.sanderik.controllers.VibrateMessageHandler;
 import org.springframework.context.annotation.Bean;

@@ -3,8 +3,4 @@ jdk:
  - oraclejdk8
 before_install:
   - chmod +x mvnw
-deploy:
- provider: heroku
- api-key:
-  secure: Mbie6d6qqCbxwq5cOfMCTvIZDKaGcXoGz51lgsOzeQx2XEZzwL833Ompqshq+PTdzrmDdALzXGptZTvK8qFNubi/7MfLkhPSlCSkpyvUYLsB4fgMrLLfwl+90QLY3LZMmaXYj1JNFJ4SVAH4Mek6ah11qfI0Fhqygt1K+FKmE9w4CitKf0tVIfoRE72MwqCL/TNDQpRH79SJ9MoZMgjEzjv4JZpNRGtpvDF4SF648Cj0CZauEdKDrUp083y1O6MY4sdVGPbLbpV2HzaKBT9wBkTMurih0SNXsnTu4y+LcTMk9XQ8vwE3qIfitlsLQK/Lw3Mqt3lZ05qeNnk2e//xjn/667fq/2RwvreoPrBF9QVSi4Ym0CSmu9F+8H/6Q4010Mc8YZHrgQVAf5PrdHWoOmal3Utlhs34gu7rjcwgv2UHt0FX1HXtAdQApuZc1RCGgWdjYOjXEWgwaBPfFtgCDJenE8WYMl3zL+0EWO/ArrBRQ86/B1xylrK1B6JS2JKitGS6QNkFGOpCKT/cRSVCiG735t+f8D+Z15uf9cvoH+XnFrhwrfmm0Qkvu8OoUhOnaFFHpCgXNa8HiJXVDepMFUNeC3JJrR/XOrPBW6H3KXJy+aEJqjZB3jHHpy1jFqs5feOqUmkPx1u4yb04B1aBn2wjmk+IroOrUshuySC3A/8=
- app: ibrator
+script: ./mvnw install
