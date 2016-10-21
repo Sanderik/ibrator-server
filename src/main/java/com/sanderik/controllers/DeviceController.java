@@ -32,6 +32,20 @@ public class DeviceController extends BaseController{
         return deviceResult;
     }
 
+    @RequestMapping(value = "/device/change", method = RequestMethod.POST)
+    public ModelAndView updateDeviceState(@ModelAttribute Device device, Model model) {
+        Device deviceResult = deviceRepository.findOne(device.getId());
+
+        if (deviceResult == null) {
+            model.addAttribute("error", "No device found");
+        } else {
+            deviceResult.setActive(device.isActive());
+            deviceRepository.save(deviceResult);
+        }
+
+        return new ModelAndView("redirect:/welcome");
+    }
+
     @RequestMapping(value = "/device/add", method = RequestMethod.POST)
     public ModelAndView addDevice(@ModelAttribute AddDeviceModel addDeviceModel, Model model){
         User user     = this.getUser();

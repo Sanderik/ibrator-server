@@ -17,7 +17,14 @@
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/bootstrap-switch.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/style.css" rel="stylesheet">
+
+    <!-- /container -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+    <script src="${contextPath}/resources/js/bootstrap-switch.min.js"></script>
+    <script src="${contextPath}/resources/js/devices.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -51,6 +58,7 @@
             </form>
 
             <h3> My iBrators: </h3>
+            <form id="changeDeviceState" method="POST" action="${contextPath}/device/change">
             <table class="table table-responsive">
                 <tr>
                     <th>Name</th>
@@ -62,10 +70,23 @@
                     <tr>
                         <td><c:out value="${device.name}"/></td>
                         <td><c:out value="${device.connectionToken}"/></td>
-                        <td><c:out value="${device.active == true ? 'Yes' : 'No'}"/></td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${device.active == true}">
+                                    <input type="checkbox" id="is-active" name="active" checked data-size="mini">
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" id="is-active" name="active" data-size="mini">
+                                </c:otherwise>
+                            </c:choose>
+
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <input type="hidden" name="id" value="${device.id}"/>
+                        </td>
                     </tr>
                 </c:forEach>
                 </table>
+                </form>
 
             <form id="addDeviceForm" method="POST" action="${contextPath}/device/add">
                 <h3> Add an iBrator </h3>
@@ -87,8 +108,5 @@
         </div>
     </c:if>
 
-<!-- /container -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>
