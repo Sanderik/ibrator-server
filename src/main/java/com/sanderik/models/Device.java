@@ -19,8 +19,8 @@ public class Device {
 
     private String connectionToken;
 
+
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 

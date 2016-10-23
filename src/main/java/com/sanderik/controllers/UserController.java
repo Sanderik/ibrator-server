@@ -5,8 +5,6 @@ import com.sanderik.services.SecurityService;
 import com.sanderik.services.UserService;
 import com.sanderik.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +27,7 @@ public class UserController extends BaseController {
 
         return "registration";
     }
+
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
@@ -59,7 +58,7 @@ public class UserController extends BaseController {
     public String welcome(Model model) {
         User user = this.getUser();
         model.addAttribute("devices", user.getDevices());
-        System.out.println("xxx");
+
         return "welcome";
     }
 }
