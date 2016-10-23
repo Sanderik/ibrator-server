@@ -1,5 +1,7 @@
 package com.sanderik.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -12,22 +14,27 @@ public class User {
     private Long id;
 
     @NotNull
+    @JsonIgnore
     private String email;
 
     @NotNull
+    @JsonIgnore
     private String password;
 
     @Transient
+    @JsonIgnore
     @NotNull
     private String passwordConfirm;
 
     @ManyToMany
+    @JsonIgnore
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Device> devices;
 
     public User() {

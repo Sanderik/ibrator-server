@@ -13,9 +13,18 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Create an account</title>
+    <title>iBrator</title>
 
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/bootstrap-switch.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/style.css" rel="stylesheet">
+
+    <!-- /container -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="${contextPath}/resources/js/bootstrap.min.js"></script>
+    <script src="${contextPath}/resources/js/bootstrap-switch.min.js"></script>
+    <script src="${contextPath}/resources/js/devices.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -26,15 +35,30 @@
 <body>
 
     <c:if test="${pageContext.request.userPrincipal.name != null}">
-        <div class="container">
+        <nav class="navbar navbar-inverse navbar-static-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">iBrator</a>
+                </div>
+                <div class="navbar-right">
+                    <span class="navbar-brand">Welcome ${pageContext.request.userPrincipal.name} | <a class="logout-button" onclick="document.forms['logoutForm'].submit()">Logout</a></span>
+                </div>
+            </div>
+        </nav>
 
+        <div class="container">
             <form id="logoutForm" method="POST" action="${contextPath}/logout">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             </form>
 
-            <h2>IBrator - Welcome ${pageContext.request.userPrincipal.name} | <a onclick="document.forms['logoutForm'].submit()">Logout</a></h2><br/>
-
             <h3> My iBrators: </h3>
+            <form id="changeDeviceState" method="POST" action="${contextPath}/device/change">
             <table class="table table-responsive">
                 <tr>
                     <th>Name</th>
@@ -46,10 +70,23 @@
                     <tr>
                         <td><c:out value="${device.name}"/></td>
                         <td><c:out value="${device.connectionToken}"/></td>
-                        <td><c:out value="${device.active == true ? 'Yes' : 'No'}"/></td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${device.active == true}">
+                                    <input type="checkbox" id="is-active" name="active" checked data-size="mini">
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="checkbox" id="is-active" name="active" data-size="mini">
+                                </c:otherwise>
+                            </c:choose>
+
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                            <input type="hidden" name="id" value="${device.id}"/>
+                        </td>
                     </tr>
                 </c:forEach>
                 </table>
+                </form>
 
             <form id="addDeviceForm" method="POST" action="${contextPath}/device/add">
                 <h3> Add an iBrator </h3>
@@ -62,6 +99,7 @@
                     <input class="form-control" type="text" name="connectionToken" required placeholder="Connection token*"/>
                 </div>
 
+                <span class="form-error"><c:out value="${model.error}"/></span>
 
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <input type="submit" class="btn btn-default" value="Add">
@@ -70,8 +108,5 @@
         </div>
     </c:if>
 
-<!-- /container -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="${contextPath}/resources/js/bootstrap.min.js"></script>
 </body>
 </html>

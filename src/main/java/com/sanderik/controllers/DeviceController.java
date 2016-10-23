@@ -6,12 +6,17 @@ import com.sanderik.models.User;
 import com.sanderik.models.viewmodels.AddDeviceModel;
 import com.sanderik.repositories.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class DeviceController extends BaseController{
@@ -19,6 +24,22 @@ public class DeviceController extends BaseController{
     @Autowired private DeviceRepository deviceRepository;
 
     @Autowired private TokenGenerator tokenGenerator;
+
+    @GetMapping("/device/{id}/control")
+    public ModelAndView controlDevice(@PathVariable("id") Long id, Model model){
+        List<Device> devices = this.getUser().getDevices()
+                .stream()
+                .filter(device -> Objects.equals(device.getId(), id))
+                .collect(Collectors.toList());
+
+        if(devices.size() == 0){
+            model.addAttribute("Error", "Device not found or no access to this device");
+            return new ModelAndView("redirect:/welcome");
+        }
+
+        model.addAttribute("device", devices.get(0));
+        return new ModelAndView("control");
+    }
 
     @PostMapping("/device")
     public Device registerDevice(@Valid @RequestBody Device device) {
@@ -30,6 +51,20 @@ public class DeviceController extends BaseController{
         }
 
         return deviceResult;
+    }
+
+    @RequestMapping(value = "/device/change", method = RequestMethod.POST)
+    public ModelAndView updateDeviceState(@ModelAttribute Device device, Model model) {
+        Device deviceResult = deviceRepository.findOne(device.getId());
+
+        if (deviceResult == null) {
+            model.addAttribute("error", "No device found");
+        } else {
+            deviceResult.setActive(device.isActive());
+            deviceRepository.save(deviceResult);
+        }
+
+        return new ModelAndView("redirect:/welcome");
     }
 
     @RequestMapping(value = "/device/add", method = RequestMethod.POST)
@@ -46,15 +81,8 @@ public class DeviceController extends BaseController{
 
             deviceRepository.save(device);
             userRepository.save(user);
-            model.addAttribute(user.getDevices());
         }
+
         return new ModelAndView("redirect:/welcome");
-    }
-
-    @RequestMapping("/send/{message}")
-    public String sendMessage(@PathVariable("message") String message) throws IOException {
-        VibrateMessageHandler.sendMsg(message);
-
-        return message;
     }
 }

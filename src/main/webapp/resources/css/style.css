@@ -1,0 +1,19 @@
+body{
+    font-family: "Open Sans";
+}
+
+.logout-button{
+    color : white !important;
+}
+
+.logout-button:hover {
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+}
+
+.form-error {
+    font-size: 12px;
+    color : red;
+}
+
