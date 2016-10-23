@@ -13,6 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 public class DeviceController extends BaseController{
@@ -21,9 +25,20 @@ public class DeviceController extends BaseController{
 
     @Autowired private TokenGenerator tokenGenerator;
 
-    @GetMapping("/device")
-    public String getDevice(){
-        return "wtf is dit";
+    @GetMapping("/device/{id}/control")
+    public ModelAndView controlDevice(@PathVariable("id") Long id, Model model){
+        List<Device> devices = this.getUser().getDevices()
+                .stream()
+                .filter(device -> Objects.equals(device.getId(), id))
+                .collect(Collectors.toList());
+
+        if(devices.size() == 0){
+            model.addAttribute("Error", "Device not found or no access to this device");
+            return new ModelAndView("redirect:/welcome");
+        }
+
+        model.addAttribute("device", devices.get(0));
+        return new ModelAndView("control");
     }
 
     @PostMapping("/device")
@@ -69,13 +84,5 @@ public class DeviceController extends BaseController{
         }
 
         return new ModelAndView("redirect:/welcome");
-    }
-
-    @RequestMapping("/send/{message}")
-    public String sendMessage(@PathVariable("message") String message) throws IOException {
-        User user     = this.getUser();
-//        VibrateMessageHandler.sendMsg(message);
-
-        return message;
     }
 }

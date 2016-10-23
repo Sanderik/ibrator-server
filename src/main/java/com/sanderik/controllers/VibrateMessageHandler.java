@@ -1,7 +1,6 @@
 package com.sanderik.controllers;
 
 import com.sanderik.models.Device;
-import com.sanderik.models.User;
 import com.sanderik.repositories.DeviceRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,10 @@ import java.util.stream.Collectors;
 
 public class VibrateMessageHandler extends TextWebSocketHandler {
 
+    @Autowired
+    private DeviceRepository deviceRepository;
+
     private static HashMap<Device, WebSocketSession> deviceWsSessions;
-
-    @Autowired private DeviceRepository deviceRepository;
-
 
     public VibrateMessageHandler(){
         super();
@@ -33,9 +32,7 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException {
         JSONObject payload = new JSONObject(message.getPayload());
 
-        System.out.println("jmd");
         if(!payload.has("token")){
-            System.out.println("msg has no token");
             session.close();
         }
         else {
@@ -44,6 +41,7 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
     }
 
     // Remove the Set<User, WebSocketSession> from the Hashmap when the connection is closed.
+    // TODO : This does not work on ESP, but with a JS browser client it DOES work for some reaosn?
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         Set<Device> keySet = deviceWsSessions.entrySet()
@@ -52,11 +50,16 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
 
+        Device device = keySet.iterator().next();
+        device.setActive(false);
+        deviceRepository.save(device);
+
         deviceWsSessions.remove(keySet.iterator().next());
         session.close();
     }
 
 
+    // This method can be used by controllers to access the active websocket session for the device.
     public static WebSocketSession getActiveSessionForDevice(Device device){
         return deviceWsSessions.get(device);
     }
@@ -67,6 +70,9 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
             session.close();
         } else {
             deviceWsSessions.put(device, session);
+            device.setActive(true);
+            deviceRepository.save(device);
+
             TextMessage msg = new TextMessage(device.getUser().getEmail() + " is successfully authenticated.");
             session.sendMessage(msg);
         }
