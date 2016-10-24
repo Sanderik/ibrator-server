@@ -4,12 +4,16 @@ import com.sanderik.helpers.TokenGenerator;
 import com.sanderik.models.Device;
 import com.sanderik.models.User;
 import com.sanderik.models.viewmodels.AddDeviceModel;
+import com.sanderik.models.viewmodels.ControlDeviceViewModel;
 import com.sanderik.repositories.DeviceRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -38,6 +42,34 @@ public class DeviceController extends BaseController{
         }
 
         model.addAttribute("device", devices.get(0));
+        return new ModelAndView("control");
+    }
+
+    @PostMapping("/device/control")
+    public ModelAndView controlDevice(@ModelAttribute ControlDeviceViewModel controlDeviceViewModel, Model model) throws IOException {
+        List<Device> devices = this.getUser().getDevices()
+                .stream()
+                .filter(device -> Objects.equals(device.getId(), controlDeviceViewModel.getDeviceId()))
+                .collect(Collectors.toList());
+
+        if(devices.size() == 0){
+            model.addAttribute("Error", "Device not found or no access to this device");
+            return new ModelAndView("redirect:/welcome");
+        }
+
+        Device device = devices.get(0);
+        WebSocketSession session = VibrateMessageHandler.getActiveSessionForDevice(device.getId());
+        model.addAttribute("device", devices.get(0));
+
+        if(session == null){
+            model.addAttribute("error", "No active session found, please turn on your device first and make sure it's connected to the internet.");
+            return new ModelAndView("control");
+        }
+
+        JSONObject obj = new JSONObject();
+        obj.put("duration", controlDeviceViewModel.getDuration());
+        session.sendMessage(new TextMessage(obj.toString()));
+
         return new ModelAndView("control");
     }
 

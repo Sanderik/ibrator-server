@@ -44,7 +44,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">iBrator</a>
+                <a class="navbar-brand" href="/">iBrator</a>
             </div>
             <div class="navbar-right">
                 <span class="navbar-brand">Welcome ${pageContext.request.userPrincipal.name} | <a class="logout-button" onclick="document.forms['logoutForm'].submit()">Logout</a></span>
@@ -64,12 +64,17 @@
             <h2>Control - <c:out value="${device.name}"/></h2>
 
             <form method="post" action="${contextPath}/device/control">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="duration" required placeholder="Duration"/>
-                </div>
+                <input type="hidden" name="deviceId" value="${device.id}">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <div class="form-group">
-                    <input class="btn btn-default" type="submit" name="duration" required placeholder="Start"/>
+                    <input class="form-control" type="number" name="duration" required placeholder="Duration"/>
+                </div>
+
+                <span class="form-error"><c:out value="${error}"/></span><br/><br/>
+
+                <div class="form-group">
+                    <input class="btn btn-default" type="submit" name="duration" required value="Start"/>
                 </div>
             </form>
 

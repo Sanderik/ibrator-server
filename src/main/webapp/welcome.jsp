@@ -62,14 +62,14 @@
             <table class="table table-responsive">
                 <tr>
                     <th>Name</th>
-                    <th>Connection token</th>
+                    <th>&nbsp;</th>
                     <th>Active</th>
                 </tr>
 
                 <c:forEach var="device" items="${devices}">
                     <tr>
                         <td><c:out value="${device.name}"/></td>
-                        <td><c:out value="${device.connectionToken}"/></td>
+                        <td><a href="${contextPath}/device/${device.id}/control">Control</a> </td>
                         <td>
                             <c:choose>
                                 <c:when test="${device.active == true}">
