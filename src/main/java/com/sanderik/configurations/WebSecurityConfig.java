@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/resources/**", "/registration", "/ws/vibrate").permitAll()
+                    .antMatchers("/admin").hasAnyAuthority("admin")
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
