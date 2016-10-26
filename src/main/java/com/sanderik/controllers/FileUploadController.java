@@ -46,12 +46,12 @@ public class FileUploadController {
 
     @GetMapping("/firmware/version/{currentVersion:.+}")
     @ResponseBody
-    public ResponseEntity<Resource> serveFile(@PathVariable String currentVersion) {
+    public ResponseEntity serveFile(@PathVariable String currentVersion) {
         try {
             Resource latestVersion = storageService.getLatestVersion(Double.parseDouble(currentVersion));
 
             if (latestVersion == null) {
-                return null;
+                return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity
                         .ok()
@@ -59,7 +59,7 @@ public class FileUploadController {
                         .body(latestVersion);
             }
         } catch (Exception e) {
-            return null;
+            return ResponseEntity.noContent().build();
         }
     }
 
