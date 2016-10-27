@@ -1,10 +1,13 @@
 package com.sanderik.controllers;
 
+import com.sanderik.models.Device;
+import com.sanderik.repositories.DeviceRepository;
 import com.sanderik.storage.StorageFileNotFoundException;
 import com.sanderik.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +22,9 @@ import java.util.stream.Collectors;
 public class FileUploadController {
 
     private final StorageService storageService;
+
+    @Autowired
+    private DeviceRepository deviceRepository;
 
     @Autowired
     public FileUploadController(StorageService storageService) {
@@ -41,7 +47,12 @@ public class FileUploadController {
 
     @GetMapping("/firmware/version/{currentVersion:.+}")
     @ResponseBody
-    public ResponseEntity serveFile(@PathVariable String currentVersion) {
+    public ResponseEntity serveFile(@PathVariable String currentVersion, @RequestHeader(value = "Authorization") String connectionToken) {
+        Device device = deviceRepository.findOneByConnectionToken(connectionToken);
+
+        if(device == null)
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
         try {
             Resource latestVersion = storageService.getLatestVersion(Double.parseDouble(currentVersion));
 
