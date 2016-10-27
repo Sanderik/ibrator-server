@@ -55,6 +55,9 @@
             <div class="text-center">${error}</div>
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
+            <br/>
+            <a href="#">Forgot password?</a>
+
             <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
             <h4 class="text-center"><a style="color: black;" href="${contextPath}/registration">Create an account</a></h4>
         </div>
