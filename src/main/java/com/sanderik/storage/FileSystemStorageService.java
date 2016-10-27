@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 public class FileSystemStorageService implements StorageService {
 
     private static final String prefix = "ibrator-";
-    private static final String extension = ".txt";
+    private static final String extension = ".lua";
 
 
     private final Path rootLocation;
