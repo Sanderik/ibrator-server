@@ -50,7 +50,7 @@ public class FileUploadController {
             } else {
                 return ResponseEntity
                         .ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + latestVersion.getFilename() + "\"")
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"init.lua\"")
                         .body(latestVersion);
             }
         } catch (Exception e) {
