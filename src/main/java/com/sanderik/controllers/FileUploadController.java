@@ -60,8 +60,12 @@ public class FileUploadController {
 
     @PostMapping("/admin")
     public String handleFileUpload(@RequestParam("file") MultipartFile file, Model model) {
-        storageService.store(file);
-        model.addAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+        try {
+            storageService.store(file);
+            model.addAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+        } catch (Exception e) {
+            model.addAttribute("error", "Filename " + file.getOriginalFilename() + "already exist, try another one");
+        }
 
         return "uploadForm";
     }

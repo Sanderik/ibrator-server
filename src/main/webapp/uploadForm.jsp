@@ -70,6 +70,7 @@
             <input type="submit" class="btn btn-default" value="Upload" />
             <br>
             <div class="text-success">${message}</div>
+            <div class="text-danger">${error}</div>
 
         </form>
 
