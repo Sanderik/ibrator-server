@@ -1,7 +1,5 @@
 body {
-    padding-top: 40px;
-    padding-bottom: 40px;
-    background-color: #eee;
+    font-family: "Open Sans";
 }
 
 .form-signin {
@@ -45,4 +43,14 @@ body {
 
 .has-error {
     color: red
+}
+
+.pw-tips{
+    color: black;
+    font-size: 13px;
+}
+
+.pw-tips:hover {
+    color: black;
+    cursor : pointer;
 }
