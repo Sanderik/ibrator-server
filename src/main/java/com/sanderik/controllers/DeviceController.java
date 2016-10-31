@@ -8,7 +8,6 @@ import com.sanderik.models.viewmodels.ControlDeviceViewModel;
 import com.sanderik.repositories.DeviceRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,7 +18,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -109,6 +107,7 @@ public class DeviceController extends BaseController{
         } else {
             user.addDevice(device);
             device.setUser(user);
+
             device.setName(addDeviceModel.getName());
 
             deviceRepository.save(device);
