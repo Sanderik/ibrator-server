@@ -24,9 +24,6 @@ public class FileUploadController {
     private final StorageService storageService;
 
     @Autowired
-    private DeviceRepository deviceRepository;
-
-    @Autowired
     public FileUploadController(StorageService storageService) {
         this.storageService = storageService;
     }
@@ -47,15 +44,11 @@ public class FileUploadController {
 
     @GetMapping("/firmware/version/{currentVersion:.+}")
     @ResponseBody
-    public ResponseEntity serveFile(@PathVariable String currentVersion, @RequestHeader(value = "Authorization") String connectionToken) {
-        Device device = deviceRepository.findOneByConnectionToken(connectionToken);
-
-        if(device == null)
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
+    public ResponseEntity serveFile(@PathVariable String currentVersion) {
         try {
-            Resource latestVersion = storageService.getLatestVersion(Double.parseDouble(currentVersion));
+            Resource latestVersion = storageService.getLatestVersion(Integer.parseInt(currentVersion));
 
+            System.out.println(latestVersion);
             if (latestVersion == null) {
                 return ResponseEntity.noContent().build();
             } else {
