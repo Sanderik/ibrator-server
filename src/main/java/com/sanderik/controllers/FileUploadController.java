@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import java.io.IOException;
 import java.util.stream.Collectors;
 
+
 @Controller
 public class FileUploadController {
 
@@ -42,6 +43,7 @@ public class FileUploadController {
         return "uploadForm";
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/firmware/version/{currentVersion:.+}")
     @ResponseBody
     public ResponseEntity serveFile(@PathVariable String currentVersion) {
