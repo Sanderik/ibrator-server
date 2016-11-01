@@ -4,6 +4,7 @@ import com.sanderik.models.Device;
 import com.sanderik.repositories.DeviceRepository;
 import com.sanderik.storage.StorageFileNotFoundException;
 import com.sanderik.storage.StorageService;
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -70,7 +71,11 @@ public class FileUploadController {
             storageService.store(file);
             model.addAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
         } catch (Exception e) {
-            model.addAttribute("error", "Filename " + file.getOriginalFilename() + "already exist, try another one");
+            if (e instanceof InvalidFileNameException) {
+                model.addAttribute("error", e.getMessage());
+            } else {
+                model.addAttribute("error", "Filename " + file.getOriginalFilename() + "already exist, try another one");
+            }
         }
 
         return "uploadForm";
