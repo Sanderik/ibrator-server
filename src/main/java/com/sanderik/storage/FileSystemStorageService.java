@@ -21,8 +21,7 @@ import java.util.stream.Stream;
 public class FileSystemStorageService implements StorageService {
 
     private static final String prefix = "ibrator-";
-    private static final String extension = ".txt";
-
+    private static final String extension = ".lua";
 
     private final Path rootLocation;
 
@@ -63,9 +62,9 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public Resource getLatestVersion(double currentVersion) {
+    public Resource getLatestVersion(int currentVersion) {
         try {
-            double latestVersion = getLatestVersion(loadAll().collect(Collectors.toList()));
+            int latestVersion = getLatestVersion(loadAll().collect(Collectors.toList()));
 
             if (currentVersion < latestVersion) {
                 String filename = prefix + String.valueOf(latestVersion) + extension;
@@ -85,14 +84,16 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    private double getLatestVersion(List<Path> files) {
-        double latestVersion = 0.0;
+    private int getLatestVersion(List<Path> files) {
+        int latestVersion = 0;
 
         for (Path file : files) {
-            String versionString = file.getFileName().toString()
+            String versionString = file.getFileName().toString();
+            versionString = versionString
                     .replaceFirst(prefix, "")
                     .replace(extension, "");
-            double version = Double.parseDouble(versionString);
+
+            int version = Integer.parseInt(versionString);
 
             if (version > latestVersion) {
                 latestVersion = version;

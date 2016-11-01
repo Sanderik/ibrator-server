@@ -16,7 +16,7 @@ public interface StorageService {
 
     Path load(String filename);
 
-    Resource getLatestVersion(double currentVersion);
+    Resource getLatestVersion(int currentVersion);
 
     Resource loadAsResource(String filename);
 

@@ -2,7 +2,9 @@ package com.sanderik.models.viewmodels;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class ControlDeviceViewModel {
 
@@ -11,6 +13,7 @@ public class ControlDeviceViewModel {
 
     // Duration in seconds.
     @NotNull
+    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Please use a number above 0")
     private int duration;
 
     public Long getDeviceId() {

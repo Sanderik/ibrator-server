@@ -35,25 +35,6 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
         }
     }
 
-    // Remove the Set<User, WebSocketSession> from the Hashmap when the connection is closed.
-    // This does not work on ESP, but with a JS browser client it DOES work for some reaosn?
-//    @Override
-//    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-//        Set<Long> keySet = deviceIdsWsSessions.entrySet()
-//                .stream()
-//                .filter(entry -> Objects.equals(entry.getValue(), session))
-//                .map(Map.Entry::getKey)
-//                .collect(Collectors.toSet());
-//
-//        Long device = keySet.iterator().next();
-//        device.setActive(false);
-//        deviceRepository.save(device);
-//
-//        deviceIdsWsSessions.remove(keySet.iterator().next());
-//        session.close();
-//    }
-
-
     // This method can be used by controllers to access the active websocket session for the device.
     public static WebSocketSession getActiveSessionForDevice(Long deviceId){
         return deviceIdsWsSessions.get(deviceId);
@@ -67,9 +48,6 @@ public class VibrateMessageHandler extends TextWebSocketHandler {
             deviceIdsWsSessions.put(device.getId(), session);
             device.setActive(true);
             deviceRepository.save(device);
-
-//            TextMessage msg = new TextMessage(device.getUser().getEmail() + " is successfully authenticated.");
-//            session.sendMessage(msg);
         }
     }
 }

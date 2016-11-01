@@ -1,6 +1,7 @@
 package com.sanderik.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 
@@ -19,17 +20,25 @@ public class Device {
 
     private String connectionToken;
 
-
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Device(){}
+    public Device(){
+
+    }
 
     public Device(String chipId, String connectionToken) {
         this.active = false;
         this.chipId = chipId;
         this.connectionToken = connectionToken;
+    }
+
+    @JsonProperty
+    @Transient
+    private boolean hasUser(){
+        return this.user != null;
     }
 
     public Long getId() {

@@ -68,7 +68,7 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <div class="form-group">
-                    <input class="form-control" type="number" name="duration" required placeholder="Duration"/>
+                    <input class="form-control" min="1" type="number" name="duration" required placeholder="Duration"/>
                 </div>
 
                 <span class="form-error"><c:out value="${error}"/></span><br/><br/>

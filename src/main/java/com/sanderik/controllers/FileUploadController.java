@@ -1,10 +1,13 @@
 package com.sanderik.controllers;
 
+import com.sanderik.models.Device;
+import com.sanderik.repositories.DeviceRepository;
 import com.sanderik.storage.StorageFileNotFoundException;
 import com.sanderik.storage.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 
 import java.io.IOException;
 import java.util.stream.Collectors;
+
 
 @Controller
 public class FileUploadController {
@@ -39,12 +43,14 @@ public class FileUploadController {
         return "uploadForm";
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/firmware/version/{currentVersion:.+}")
     @ResponseBody
     public ResponseEntity serveFile(@PathVariable String currentVersion) {
         try {
-            Resource latestVersion = storageService.getLatestVersion(Double.parseDouble(currentVersion));
+            Resource latestVersion = storageService.getLatestVersion(Integer.parseInt(currentVersion));
 
+            System.out.println(latestVersion);
             if (latestVersion == null) {
                 return ResponseEntity.noContent().build();
             } else {
