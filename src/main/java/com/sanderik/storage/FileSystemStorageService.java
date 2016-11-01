@@ -1,5 +1,6 @@
 package com.sanderik.storage;
 
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -35,6 +36,9 @@ public class FileSystemStorageService implements StorageService {
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + file.getOriginalFilename());
+            }
+            if (!file.getOriginalFilename().endsWith(".lua")) {
+                throw new InvalidFileNameException(".lua", "Cannot save file type, extension must be .lua");
             }
             Files.copy(file.getInputStream(), this.rootLocation.resolve(file.getOriginalFilename()));
         } catch (IOException e) {

@@ -2,9 +2,7 @@ package com.sanderik.models.viewmodels;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 
 public class ControlDeviceViewModel {
 
@@ -13,8 +11,8 @@ public class ControlDeviceViewModel {
 
     // Duration in seconds.
     @NotNull
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="Please use a number above 0")
-    private int duration;
+    @Size(min = 0, max = 100)
+    private int intensity;
 
     public Long getDeviceId() {
         return deviceId;
@@ -24,11 +22,11 @@ public class ControlDeviceViewModel {
         this.deviceId = deviceId;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getIntensity() {
+        return intensity;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setIntensity(int intensity) {
+        this.intensity = intensity;
     }
 }

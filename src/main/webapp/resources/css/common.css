@@ -46,11 +46,9 @@ body {
 }
 
 .pw-tips{
-    color: black;
     font-size: 13px;
 }
 
 .pw-tips:hover {
-    color: black;
     cursor : pointer;
 }
