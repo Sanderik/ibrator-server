@@ -41,13 +41,13 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
                 <div class="form-group">
-                    <input class="form-control" min="1" type="number" name="duration" required placeholder="Duration"/>
+                    <input class="form-control" min="0" max="100" type="number" name="intensity" required placeholder="Duration"/>
                 </div>
 
                 <span class="form-error"><c:out value="${error}"/></span><br/><br/>
 
                 <div class="form-group">
-                    <input class="btn btn-default" type="submit" name="duration" required value="Start"/>
+                    <input class="btn btn-default" type="submit" name="intensity" required value="Start"/>
                 </div>
             </form>
 

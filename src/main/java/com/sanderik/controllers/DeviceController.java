@@ -66,7 +66,7 @@ public class DeviceController extends BaseController{
         }
 
         JSONObject obj = new JSONObject();
-        obj.put("duration", controlDeviceViewModel.getDuration());
+        obj.put("duration", controlDeviceViewModel.getIntensity());
         session.sendMessage(new TextMessage(obj.toString()));
 
         return new ModelAndView("control");
