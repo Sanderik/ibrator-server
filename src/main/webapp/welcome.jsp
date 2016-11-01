@@ -19,6 +19,7 @@
     <link href="${contextPath}/resources/css/bootstrap.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/bootstrap-switch.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/bootstrap-material-design.min.css" rel="stylesheet">
+    <link href="${contextPath}/resources/css/nouislider.min.css" rel="stylesheet">
     <link href="${contextPath}/resources/css/style.css" rel="stylesheet">
 
 
@@ -34,35 +35,31 @@
             </form>
 
             <h3> My iBrators: </h3>
-            <form id="changeDeviceState" method="POST" action="${contextPath}/device/change">
             <table class="table table-responsive">
                 <tr>
                     <th>Name</th>
-                    <th>&nbsp;</th>
-                    <th>Active</th>
+                    <th>Control</th>
                 </tr>
 
                 <c:forEach var="device" items="${devices}">
-                    <tr>
-                        <td><c:out value="${device.name}"/></td>
-                        <td><a href="${contextPath}/device/${device.id}/control">Control</a> </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${device.active == true}">
-                                    <input type="checkbox" id="is-active" name="active" checked data-size="mini">
-                                </c:when>
-                                <c:otherwise>
-                                    <input type="checkbox" id="is-active" name="active" data-size="mini">
-                                </c:otherwise>
-                            </c:choose>
-
-                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                            <input type="hidden" name="id" value="${device.id}"/>
-                        </td>
-                    </tr>
+                    <form id="form-control-device-${device.id}" method="post" action="${contextPath}/device/control">
+                        <tr style="height: 105px;">
+                            <td class="col-md-4 col-xs-3"><c:out value="${device.name}"/></td>
+                            <td class="col-md-8 col-xs-9">
+                                <div class="slider shor" id="device-${device.id}"></div>
+                                <div class="noUi-pips noUi-pips-horizontal" id="pips-range-${device.id}">
+                                </div>
+                                <input type="hidden" name="intensity">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                                <input type="hidden" name="deviceId" value="${device.id}">
+                                <br>
+                                <span id="error-device-${device.id}" class="form-error hidden">No active session found, please turn on your device first and make sure it's connected to the internet.</span>
+                            </td>
+                        </tr>
+                    </form>
                 </c:forEach>
-                </table>
-                </form>
+            </table>
+
 
             <form id="addDeviceForm" method="POST" action="${contextPath}/device/add">
                 <h3> Add an iBrator </h3>
@@ -88,10 +85,60 @@
 
     <script src="${contextPath}/resources/js/material.min.js"></script>
     <script src="${contextPath}/resources/js/ripples.min.js"></script>
+    <script src="${contextPath}/resources/js/nouislider.min.js"></script>
     <script>
         $(function () {
             $.material.init();
-        })
+        });
+
+
+        $(document).ready(function() {
+            $('.slider').each(function() {
+                var slider = this;
+
+                var range_all_sliders = {
+                    'min': [ 0 ],
+                    '50%': [ 50 ],
+                    'max': [ 100 ]
+                };
+
+                noUiSlider.create(slider, {
+                    start: [ 0 ],
+
+                    range: range_all_sliders,
+                    pips: {
+                        mode: 'range',
+                        density: 3
+                    }
+                });
+
+                slider.noUiSlider.on('set', function(value){
+                    var intensity = Math.floor(value);
+                    $('input[name="intensity"]').val(intensity);
+
+                    var id = this.target.id;
+
+                    $.ajax({
+                        type: 'post',
+                        url: '${contextPath}/device/control',
+                        data: $('#form-control-' + this.target.id).serialize(),
+                        success: function (data, textStatus, xhr) {
+                            if (xhr.status != 200) {
+                                raiseNoConnection(id);
+                            }
+                        },error: function(data, textStatus, xhr){
+                            raiseNoConnection(id);
+                        }
+                    });
+                });
+            });
+        });
+
+        function raiseNoConnection(id) {
+            var span = $('#error-' + id);
+            console.log(span);
+            span.removeClass("hidden");
+        }
     </script>
 
     <script src="${contextPath}/resources/js/bootstrap-switch.min.js"></script>

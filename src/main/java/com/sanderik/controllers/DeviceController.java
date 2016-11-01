@@ -8,6 +8,8 @@ import com.sanderik.models.viewmodels.ControlDeviceViewModel;
 import com.sanderik.repositories.DeviceRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,7 +47,7 @@ public class DeviceController extends BaseController{
     }
 
     @PostMapping("/device/control")
-    public ModelAndView controlDevice(@ModelAttribute ControlDeviceViewModel controlDeviceViewModel, Model model) throws IOException {
+    public ResponseEntity<ModelAndView> controlDevice(@ModelAttribute ControlDeviceViewModel controlDeviceViewModel, Model model) throws IOException {
         List<Device> devices = this.getUser().getDevices()
                 .stream()
                 .filter(device -> Objects.equals(device.getId(), controlDeviceViewModel.getDeviceId()))
@@ -53,7 +55,7 @@ public class DeviceController extends BaseController{
 
         if(devices.size() == 0){
             model.addAttribute("Error", "Device not found or no access to this device");
-            return new ModelAndView("redirect:/welcome");
+            return ResponseEntity.badRequest().body(new ModelAndView("redirect:/welcome"));
         }
 
         Device device = devices.get(0);
@@ -62,14 +64,14 @@ public class DeviceController extends BaseController{
 
         if(session == null){
             model.addAttribute("error", "No active session found, please turn on your device first and make sure it's connected to the internet.");
-            return new ModelAndView("control");
+            return ResponseEntity.badRequest().body(new ModelAndView("welcome"));
         }
 
         JSONObject obj = new JSONObject();
         obj.put("duration", controlDeviceViewModel.getIntensity());
         session.sendMessage(new TextMessage(obj.toString()));
 
-        return new ModelAndView("control");
+        return ResponseEntity.ok().body(new ModelAndView("welcome"));
     }
 
     @PostMapping("/device")
